@@ -3,7 +3,7 @@ import pandas as pd
 from src import authorize
 from src import get_methods
 
-token:str = authorize.get_acces_token()
+token = authorize.get_acces_token()
 
 activities = get_methods.get_activities(token)
 

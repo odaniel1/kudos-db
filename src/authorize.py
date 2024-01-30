@@ -9,7 +9,7 @@ def get_acces_token():
 
     # these params needs to be passed to get access
     # token used for retrieveing actual data
-    payload:dict = {
+    payload = {
     'client_id': os.environ.get('CLIENT_ID'),
     'client_secret': os.environ.get('CLIENT_SECRET'),
     'refresh_token': os.environ.get('REFRESH_TOKEN'),

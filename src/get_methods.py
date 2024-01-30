@@ -2,10 +2,10 @@
 import requests
 import pandas as pd
 
-def get_activities(access_token:str):
+def get_activities(access_token):
     # get data from strava api
-    headers:dict = {'Authorization': f'Authorization: Bearer {access_token}'}
-    activities:dict = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers).json()
+    headers = {'Authorization': f'Authorization: Bearer {access_token}'}
+    activities = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers).json()
     
     # cast to dataframe, retaining only required fields
     activities_df = pd.json_normalize(activities)
@@ -13,11 +13,11 @@ def get_activities(access_token:str):
     
     return activities_df
 
-def get_kudoers(id:str, access_token:str):
+def get_kudoers(id, access_token):
     # get data from strava api
-    headers:dict = {'Authorization': f'Authorization: Bearer {access_token}'}
-    url:str = "https://www.strava.com/api/v3/activities/"+str(id)+"/kudos"
-    kudoers:dict = requests.get(url, headers=headers).json()
+    headers = {'Authorization': f'Authorization: Bearer {access_token}'}
+    url = "https://www.strava.com/api/v3/activities/"+str(id)+"/kudos"
+    kudoers = requests.get(url, headers=headers).json()
 
     # cast to dataframe, retaining only required fields
     kudoers_df = pd.json_normalize(kudoers)

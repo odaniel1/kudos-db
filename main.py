@@ -2,15 +2,17 @@ import pandas as pd
 
 from src import authorize
 from src import get_methods
+from src import db_methods
 
 token = authorize.get_acces_token()
 
-activities = get_methods.get_activities(token)
+activities_df = get_methods.get_activities(token, per_page = 200)
 
-kudos = [get_methods.get_kudoers(id,token) for id in activities['id']]
-kudos_df = pd.concat(kudos,ignore_index=True)
+# write activities to cache
+new_activities_df = db_methods.update_cache(activities_df, 'data/activities_cache.csv', return_new = True)
 
-kudos_summary = kudos_df.groupby(['name'])['name'].count().reset_index(name='count')
-kudos_summary = kudos_summary.sort_values(['count'], ascending=False)
+if new_activities_df is not None:
+    kudos = [get_methods.get_kudoers(id,token) for id in new_activities_df['id']]
+    kudos_df = pd.concat(kudos,ignore_index=True)
 
-print(kudos_summary.to_string())
+    db_methods.update_cache(kudos_df, 'data/kudos_cache.csv')

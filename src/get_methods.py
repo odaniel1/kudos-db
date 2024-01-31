@@ -2,10 +2,10 @@
 import requests
 import pandas as pd
 
-def get_activities(access_token):
+def get_activities(access_token, per_page = 30):
     # get data from strava api
     headers = {'Authorization': f'Authorization: Bearer {access_token}'}
-    activities = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers).json()
+    activities = requests.get(f"https://www.strava.com/api/v3/athlete/activities?per_page={per_page}", headers=headers).json()
     
     # cast to dataframe, retaining only required fields
     activities_df = pd.json_normalize(activities)
@@ -13,10 +13,10 @@ def get_activities(access_token):
     
     return activities_df
 
-def get_kudoers(id, access_token):
+def get_kudoers(activity_id, access_token):
     # get data from strava api
     headers = {'Authorization': f'Authorization: Bearer {access_token}'}
-    url = "https://www.strava.com/api/v3/activities/"+str(id)+"/kudos"
+    url = "https://www.strava.com/api/v3/activities/"+str(activity_id)+"/kudos"
     kudoers = requests.get(url, headers=headers).json()
 
     # cast to dataframe, retaining only required fields
@@ -26,7 +26,7 @@ def get_kudoers(id, access_token):
         kudoers_df = pd.DataFrame(columns=['firstname', 'lastname'])
 
     kudoers_df['name'] = kudoers_df['firstname']+ ' ' + kudoers_df['lastname']
-    kudoers_df.insert(0, 'id', id)
-    kudoers_df = kudoers_df[['id', 'name']]
+    kudoers_df.insert(0, 'activity_id', activity_id)
+    kudoers_df = kudoers_df[['activity_id', 'name']]
     
     return kudoers_df
